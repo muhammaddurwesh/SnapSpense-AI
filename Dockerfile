@@ -1,29 +1,22 @@
 # Step 1: Build the React application
 FROM node:20-alpine AS build
-
 WORKDIR /app
-
-# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
-
-# Copy all other project files
 COPY . .
-
-# Build the app for production
 RUN npm run build
 
-# Step 2: Serve the app with Nginx
-FROM nginx:alpine
-
-# Copy the custom nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
+# Step 2: Serve the app with Node.js
+FROM node:20-alpine
+WORKDIR /app
+COPY package*.json ./
+# Install only production dependencies
+RUN npm install --omit=dev
 # Copy the built React app from the previous stage
-COPY --from=build /app/dist /usr/share/nginx/html
-
+COPY --from=build /app/dist ./dist
+# Copy the server file
+COPY server.js ./
 # Expose port 8080 (Cloud Run default)
 EXPOSE 8080
-
-# Start Nginx and inject runtime environment variables into env.js
-CMD sed -i "s|\\${GEMINI_API_KEY}|$GEMINI_API_KEY|g" /usr/share/nginx/html/env.js && nginx -g "daemon off;"
+# Start the Express server
+CMD ["node", "server.js"]
