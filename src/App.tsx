@@ -502,7 +502,7 @@ function CategoryPill({ category }: { category: string }) {
     let bgColor = 'bg-gray-100';
     let textColor = 'text-gray-700';
 
-    const cat = category.toLowerCase();
+    const cat = (category || 'Unknown').toLowerCase();
 
     if (cat.includes('grocer') || cat.includes('food') || cat.includes('market')) {
         bgColor = 'bg-emerald-100';

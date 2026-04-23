@@ -35,7 +35,7 @@ app.post('/api/extract-receipt', async (req, res) => {
     - date (string, YYYY-MM-DD format)
     - total (number)
     - tax (number, 0 if not found)
-    - items (array of objects, each with 'name' (string) and 'price' (number))
+    - items (array of objects, each with 'name' (string), 'price' (number), and 'category' (string like 'groceries', 'dining', 'technology', 'health', etc.))
 
     If any value cannot be found, use null. For numbers use 0 if not found.`;
 
