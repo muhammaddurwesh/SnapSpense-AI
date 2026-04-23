@@ -25,5 +25,5 @@ COPY --from=build /app/dist /usr/share/nginx/html
 # Expose port 8080 (Cloud Run default)
 EXPOSE 8080
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Start Nginx and inject runtime environment variables into env.js
+CMD sed -i "s|\\${GEMINI_API_KEY}|$GEMINI_API_KEY|g" /usr/share/nginx/html/env.js && nginx -g "daemon off;"

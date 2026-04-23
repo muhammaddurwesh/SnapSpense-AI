@@ -1,7 +1,15 @@
 import { GoogleGenAI } from '@google/genai';
 
+declare global {
+  interface Window {
+    __ENV__: {
+      GEMINI_API_KEY: string;
+    };
+  }
+}
 
-const apiKey = import.meta.env.GEMINI_API_KEY;
+// Fallback to import.meta.env for local development, but use window.__ENV__ in Docker/Cloud Run
+const apiKey = (window.__ENV__?.GEMINI_API_KEY !== '${GEMINI_API_KEY}' ? window.__ENV__?.GEMINI_API_KEY : undefined) || import.meta.env.GEMINI_API_KEY;
 
 const ai = new GoogleGenAI({ apiKey: apiKey });
 
